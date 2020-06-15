@@ -1,0 +1,177 @@
+﻿@model AMS.Models.ContractDetail
+
+
+
+<div>
+    <form id="NewOrderForm">
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <input type="hidden"  id="detailId" asp-for="Id"/>
+                <input type="hidden" class="form-control" asp-items="ViewBag.ContractId" id="ContractId" asp-for="ContractId"/>
+
+                <div class="form-group">
+                    <label class="control-label col-md-1">
+                        Xidmət növü
+                    </label>
+                    <div class="col-md-3">
+                        @*<input type="text" id="supportTyp" name="supportTyp" class="form-control" />*@
+                        @*<label asp-for="Objects" class="control-label"></label>*@
+                        <select asp-for="SupportTypeId" class="form-control selectpicker" data-live-search="true" asp-items="ViewBag.SupportTypeId" id="supportTyp" name="supportTyp"></select>
+
+                    </div>
+                    <label class="control-label col-md-1">
+                        Obyekt
+                    </label>
+                    <div class="col-md-3">
+                        @*<input type="number" id="obj" name="obj" placeholder="Obyekt" class="form-control" />*@
+                        <select asp-for="ObjectsId" class="form-control" asp-items="ViewBag.ObjectsId" id="obj" name="obj"></select>
+                    </div>
+                    <label class="control-label col-md-1">
+                        Xidmət haqqı
+                    </label>
+                    <div class="col-md-3">
+                        <input asp-for="ServicePrice" type="number" id="servicePrc" name="servicePrc" placeholder="Xidmət haqqı" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Ləğv et</button>
+            <button id="saveOrder" type="submit" class="btn btn-danger">Yadda saxla</button>
+        </div>
+    </form>
+</div>
+
+<div hidden>
+    <!-- end: TOOLBAR -->
+    <!-- end: PAGE HEADER -->
+    <!-- start: BREADCRUMB -->
+    <!-- end: BREADCRUMB -->
+    <!-- start: PAGE CONTENT -->
+    <div class="panel-white" hidden>
+        <div class="panel-body">
+
+
+            <form>
+
+                <div class="form-group">
+                    <label class="control-label">Əməliyyat növün seçin</label>
+                    <select id="dropdown" class="form-control selectpicker" data-live-search="true" name="dropdown" onchange="Check(this)">
+                        <option value="1">Ödənişlər</option>
+                        <option value="2">Məxaric</option>
+                        <option value="3">Mədaxil</option>
+                    </select>
+                </div>
+            </form>
+            <!--t-->
+            @*<div class="bs-docs-example no-code">
+                    <div class="btn-group bootstrap-select dropdown">
+                        <select class="selectpicker" data-live-search="true" tabindex="-98">
+                            <option>Hot Dog, Fries and</option>
+                            <option>Burger, Shake and a Smile</option>
+                            <option>Sugar, Spice and all things nice</option>
+                        </select>
+                    </div>
+                </div>*@
+            <!--t-->
+        </div>
+    </div>
+
+    <div id="costCreatte" hidden>
+        <div class="panel-white">
+            <div class="panel-heading">
+                <h3>Xərclər</h3>
+            </div>
+            <div class="panel-body">
+                <form asp-action="CostCreate" name="myForm" onsubmit="return validateForm()">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label" required>Məbləğ</label>
+                        <input class="form-control" autocomplete="off" type="number" step="0.01" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Kimə</label>
+                        <input value=" " class="form-control" autocomplete="off" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Nə üçün</label>
+                        <input value=" " class="form-control" autocomplete="off" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Sənəd №</label>
+                        <input value=" " class="form-control" autocomplete="off" />
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <div><button type="submit" class="btn btn-primary waves-effect waves-light mr-1 ">Yadda saxla</button> </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function saveOrder(data) {
+        return $.ajax({
+            method: 'post',
+            url: "/Contracts/EditContractDetail",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+        //var data = orderArr + variables;
+        var data = [{
+            Id: parseInt($("#detailId").val()),
+            ContractId: parseInt($("#ContractId").val()),
+            SupportTypeId: parseInt($("#supportTyp").val()),
+            ObjectsId: parseInt($("#obj").val()),
+            ServicePrice: parseFloat($("#servicePrc").val())
+        }];
+        //var data = JSON.stringify({
+        //    CustomersId: parseInt($("#cust").val()),
+        //    Notes: $("#note").val(),
+        //    PaymentDate: $("#payDate").val()
+        //})
+
+        //console.log(data);
+
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+</script>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+

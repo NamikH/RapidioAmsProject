@@ -1,0 +1,186 @@
+﻿@model IEnumerable<AMS.Models.CustomerType>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <style>
+        thead input {
+            width: 100%;
+        }
+    </style>
+
+<!-- end: TOOLBAR -->
+<!-- end: PAGE HEADER -->
+<!-- start: BREADCRUMB -->
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Tənzimləmələr
+            </li>
+            <li class="active">
+                Müştəri parametrləri
+            </li>
+            <li class="active">
+                Müştəri tipi
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: PAGE CONTENT -->
+<!-- end: PAGE CONTENT-->
+<!--Modal add new building-->
+<!--New building end-->
+<!--New building end-->
+
+
+<div class="panel panel-white">
+    <div class="panel-heading">
+
+        <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#customer1" onclick="AddNewCustomerType()"><i class="fa fa-plus"></i> Yeni müştəri tipi</a>
+
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel-body">
+        <div class="table-responsive table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl" style="margin-bottom:0%" ;>
+            <table class="table table-bordered table-hover display" id="example" style="width:99.8%">
+                @*<table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse !important; border-spacing: 0 !important; width: 100% !important;">*@
+                <thead>
+                    <tr>
+                        <th>Açıqlama</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Defenition)</td>
+                            <td class="center">
+                                <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                    @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.4.1") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                    {<a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditCustomerType(@item.Id)"><i class="fa fa-edit"></i></a>}
+                                    @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.4.2") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                    {<a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Sil"><i class="fa fa-times fa fa-white"></i></a>}
+                                </div>
+                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                    <div class="btn-group">
+                                        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" onclick="EditCustomerType(@item.Id)">
+                                                    <i class="fa fa-edit"></i> Dəyişdir
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-times"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="NewCustomerType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Müştəri tipi</h4>
+            </div>
+            <div class="modal-body" id="myNewCustomerType">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditCustomerType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Müştəri tipi (dəyişdir)</h4>
+            </div>
+            <div class="modal-body" id="myEditCustomerType">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function AddNewCustomerType() {
+        var url = "/CustomerTypes/NewCustomerType";
+        $("#myNewCustomerType").load(url, function () {
+            $("#NewCustomerType").modal("show");
+        })
+    }
+    function EditCustomerType(id) {
+        var url = "/CustomerTypes/EditCustomerType?id=" + id;
+        $("#myEditCustomerType").load(url, function () {
+            $("#EditCustomerType").modal("show");
+        })
+    }
+
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Setup - add a text input to each footer cell
+        $('#example thead tr').clone(true).appendTo('#example thead');
+        $('#example thead tr:eq(1) th').each(function (i) {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var table = $('#example').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true
+        });
+    });
+</script>

@@ -1,0 +1,235 @@
+﻿@model IEnumerable<AMS.Models.SupportType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+    <style>
+        thead input {
+            width: 100%;
+        }
+    </style>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Tənzimləmələr
+            </li>
+            <li class="active">
+                Müştəri parametrləri
+            </li>
+            <li class="active">
+                Xidmət növü
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: PAGE CONTENT -->
+
+
+<div class="panel panel-white">
+    <div class="panel-heading">
+
+        <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#customer1" onclick="AddNewSupportType()"><i class="fa fa-plus"></i> Yeni xidmət növü</a>
+
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel-body">
+        <div class="table-responsive table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl" style="margin-bottom:0%" ;>
+            <table class="table table-bordered table-hover display" id="example" style="width:99.8%">
+                @*<table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse !important; border-spacing: 0 !important; width: 100% !important;">*@
+                <thead>
+                    <tr>
+                        <th>Açıqlama</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Defenition)</td>
+                            <td class="center">
+                                <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                    <a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditSupportType(@item.Id)"><i class="fa fa-edit"></i></a>
+                                    <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Sil"><i class="fa fa-times fa fa-white"></i></a>
+                                </div>
+                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                    <div class="btn-group">
+                                        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" onclick="EditSupportType(@item.Id)">
+                                                    <i class="fa fa-edit"></i> Dəyişdir
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-times"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="NewSupportType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Yeni xidmət növü</h4>
+            </div>
+            <div class="modal-body" id="myNewSupportType">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditSupportType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Yeni xidmət növü (dəyişdir)</h4>
+            </div>
+            <div class="modal-body" id="myEditSupportType">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function AddNewSupportType() {
+        var url = "/SupportTypes/NewSupportType";
+        $("#myNewSupportType").load(url, function () {
+            $("#NewSupportType").modal("show");
+        })
+    }
+    function EditSupportType(id) {
+        var url = "/SupportTypes/EditSupportType?id=" + id;
+        $("#myEditSupportType").load(url, function () {
+            $("#EditSupportType").modal("show");
+        })
+    }
+
+
+</script>
+
+
+
+
+
+
+@*<div class="modal fade" id="DeleteConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4><i class='fa fa-exclamation-triangle' style="color:#d9534f;font-size: 203%;"></i>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;font-size:130%;">Seçilmiş sətir məlumatları silinəcəkdir!</span></h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal" id="r">Ləğv et</a>
+                    <a class="btn btn-danger" onclick="ConfirmDelete()">Təstiqlə</a>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@*<script>
+        function EditSupportTypesRecord(id) {
+            var url = "/SupportTypes/GetSupportType?id=" + id;
+            //$("#ModalTitle").html("Update Student Record");
+            $("#customer1").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+
+                    $("#id").val(obj.Id);
+                    $("#defenition").val(obj.Defenition);
+                }
+            })
+        }
+
+        var DeleteSupportTypesRecord = function (id) {
+            $("#id").val(id);
+            $("#DeleteConfirmation").modal("show");
+        }
+        var ConfirmDelete = function () {
+            var supportTypeId = $("#id").val();
+            $.ajax({
+                type: "POST",
+                url: "/SupportTypes/DeleteSupportTypeRecord?id=" + supportTypeId,
+                success: function (result) {
+                    $("#DeleteConfirmation").modal("hide");
+                    $(".row_" + incomeTypeId).remove();
+                    alert("Əməliyyat uğurla tamamlandı!");
+                }
+            })
+        }
+
+    </script>*@
+
+
+<script>
+    $(document).ready(function () {
+        // Setup - add a text input to each footer cell
+        $('#example thead tr').clone(true).appendTo('#example thead');
+        $('#example thead tr:eq(1) th').each(function (i) {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var table = $('#example').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true
+        });
+    });
+</script>

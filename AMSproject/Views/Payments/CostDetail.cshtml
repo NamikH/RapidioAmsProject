@@ -1,0 +1,347 @@
+﻿@model AMS.Models.Payments
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+    <script>
+    function printDiv(divName) {
+
+        var a = convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount))));
+        $('amountWord').empty();
+        document.getElementById('amountWord').append(convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))) + 'manat')
+        if (@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100)) != 0)
+        {
+             $('PennyAmountWord').empty();
+            document.getElementById('PennyAmountWord').append(convertNumberToWords(@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))) + 'qəpik')
+        }
+        $('samountWord').empty();
+        document.getElementById('samountWord').append(convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))) + 'manat')
+        if (@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100)) != 0)
+        {
+             $('sPennyAmountWord').empty();
+            document.getElementById('sPennyAmountWord').append(convertNumberToWords(@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))) + 'qəpik')
+        }
+
+        $('amountWord2').empty();
+        document.getElementById('amountWord2').append(convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))) + 'manat')
+        if (@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100)) != 0)
+        {
+             $('PennyAmountWord2').empty();
+            document.getElementById('PennyAmountWord2').append(convertNumberToWords(@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))) + 'qəpik')
+        }
+        $('samountWord2').empty();
+        document.getElementById('samountWord2').append(convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))) + 'manat')
+        if (@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100)) != 0)
+        {
+             $('sPennyAmountWord2').empty();
+            document.getElementById('sPennyAmountWord2').append(convertNumberToWords(@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))) + 'qəpik')
+        }
+
+        console.log(a)
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+        window.location.reload(true);
+
+        function convertNumberToWords(amount) {
+            var words = new Array();
+            words[0] = '';
+            words[1] = 'bir';
+            words[2] = 'iki';
+            words[3] = 'üc';
+            words[4] = 'dörd';
+            words[5] = 'beş';
+            words[6] = 'altı';
+            words[7] = 'yeddi';
+            words[8] = 'səkkiz';
+            words[9] = 'doqquz';
+            words[10] = 'on';
+            words[11] = 'on bir';
+            words[12] = 'on iki';
+            words[13] = 'on üç';
+            words[14] = 'on dörd';
+            words[15] = 'on beş';
+            words[16] = 'on altı';
+            words[17] = 'on yeddi';
+            words[18] = 'on səkkiz';
+            words[19] = 'on doqquz';
+            words[20] = 'iyirmi';
+            words[30] = 'otuz';
+            words[40] = 'qırx';
+            words[50] = 'əlli';
+            words[60] = 'altımısh';
+            words[70] = 'yetmish';
+            words[80] = 'səksən';
+            words[90] = 'doxsan';
+            amount = amount.toString();
+            var atemp = amount.split(".");
+            var number = atemp[0].split(",").join("");
+            var n_length = number.length;
+            var words_string = "";
+            if (n_length <= 9) {
+                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+                var received_n_array = new Array();
+                for (var i = 0; i < n_length; i++) {
+                    received_n_array[i] = number.substr(i, 1);
+                }
+                for (var i = 9 - n_length, j = 0; i < 9; i++, j++) {
+                    n_array[i] = received_n_array[j];
+                }
+                for (var i = 0, j = 1; i < 9; i++, j++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) {
+                        if (n_array[i] == 1) {
+                            n_array[j] = 10 + parseInt(n_array[j]);
+                            n_array[i] = 0;
+                        }
+                    }
+                }
+                value = "";
+                for (var i = 0; i < 9; i++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) {
+                        value = n_array[i] * 10;
+                    } else {
+                        value = n_array[i];
+                    }
+                    if (value != 0) {
+                        words_string += words[value] + " ";
+                    }
+                    if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Crores ";
+                    }
+                    if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Lakhs ";
+                    }
+                    if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "min ";
+                    }
+                    if (i == 6 && value != 0 && (n_array[i + 1] != 0 && n_array[i + 2] != 0)) {
+                        words_string += "yüz ";
+                    } else if (i == 6 && value != 0) {
+                        words_string += "yüz ";
+                    }
+                }
+                words_string = words_string.split("  ").join(" ");
+            }
+            return words_string;
+        }
+    }
+    </script>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="active">
+                    Əməliyyatlar
+                </li>
+                <li class="active">
+                    Kassa əməliyyatları
+                </li>
+                <li class="active">
+                    Məxaric qaiməsi
+                </li>
+            </ol>
+        </div>
+    </div>
+
+
+<div class="panel-white" >
+    <div class="panel-heading" style="margin-bottom:-3%;padding-top:0%;">
+        <div class="panel-body">
+            <h2>Məxaric</h2>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    Xərc növü :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CostType.Defenition)
+                </dd>
+                <dt>
+                    Məbləğ :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Amount)
+                </dd>
+                <dt>
+                    Kassa :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Cash.Defenition)
+                </dd>
+                <dt>
+                    Kassa № :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Cash.Number)
+                </dd>
+            </dl>
+        </div>
+        @*<div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>*@
+        <div class="form-group mb-0">
+            <div class="panel-body">
+            <button type="submit" class="btn btn-primary waves-effect waves-light mr-1" onclick="printDiv('costDetail')">Çap et</button> 
+            <button type="reset" class="btn btn-secondary waves-effect" onclick="location.href='@Url.Action("CashOperation","Payments")'">Ana səifə</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    <div class="card modal-content" id="costDetai" style="display:none">
+        <div class="card-body">
+            <h3 class="text-center m-0">
+                <a href="index.html" class="logo logo-admin">
+                    <img src="~/assets/images/ams.png" width="300px" height="100px" alt="logo">
+                </a>
+            </h3>
+            <div class="p-3 text-center">
+                <form class="form-horizontal m-t-30" action="https://themesbrand.com/lexa/html/vertical/index.html">
+                    <div class="form-group">
+                        <label for="username"><h5><i style="font-weight:bold">Xərc növü : @Html.DisplayFor(model => model.CostType.Defenition)</i></h5></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="username"><h5><i style="font-weight:bold">Məbləğ :  @Html.DisplayFor(model => model.Amount) AZN</i> </h5></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="username"><h5><i style="font-weight:bold">Kassa :  @Html.DisplayFor(model => model.Cash.Defenition)</i></h5></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="username"><h5><i style="font-weight:bold">Kassa № :  @Html.DisplayFor(model => model.Cash.Number)</i></h5></label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    @*<div class="card" id="incomeDetail" >
+        <div class="card-body">
+            <div style="border-bottom-style:dotted">
+                <h1 style="text-align:center">"FAKTOR QRUP-S" MMC<br />VÖEN 1001139421</h1>
+                <h2 style="text-align:center">"KASSA MƏDAXİL ORDERİ"</h2>
+                <h6 style="text-align:center">"<span style="text-decoration:underline;">Day</span>"<span style="text-decoration:underline;">Month</span><span style="text-decoration:underline;">  Year</span> İl</h6>
+                <div style="padding-left:3%">
+                    <h2>Kimdən____________________________________________________________________________________________________________________________________</h2><br />
+                    <h2>Nəüçün_________________________________________________________________________________________________________________________________________________________________________________________________________</h2>
+                    <h2>Məbləğ___________________________________________________________________________________________________________________________________________________________________________________________man._______qəp</h2>
+                    <h2>Kassaya mədaxil edilmişdir</h2>
+
+                    <div class="row">
+                        <div class="col-md-1">
+                            <h2 style="margin-top:105%">M.Y.</h2>
+                        </div>
+                        <div class="col-md-9">
+                            <h2>Rəhbər</h2><h2>Baş mühasib</h2><h2>Kassir</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h1 style="text-align:center">"FAKTOR QRUP-S" MMC<br />VÖEN 1001139421</h1>
+                <h2 style="text-align:center">"KASSA MƏDAXİL ORDERİ"</h2>
+                <h6 style="text-align:center">"<span style="text-decoration:underline;">Day</span>"<span style="text-decoration:underline;">Month</span><span style="text-decoration:underline;">  Year</span> İl</h6>
+                <div style="padding-left:3%">
+                    <h2>Kimdən____________________________________________________________________________________________________________________________________</h2><br />
+                    <h2>Nəüçün_________________________________________________________________________________________________________________________________________________________________________________________________________</h2>
+                    <h2>Məbləğ___________________________________________________________________________________________________________________________________________________________________________________________man._______qəp</h2>
+                    <h2>Kassaya mədaxil edilmişdir</h2>
+
+                    <div class="row">
+                        <div class="col-md-1">
+                            <h2 style="margin-top:105%">M.Y.</h2>
+                        </div>
+                        <div class="col-md-9">
+                            <h2>Rəhbər</h2><h2>Baş mühasib</h2><h2>Kassir</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div class="card">
+    <div class="card-body">
+        <h1 style="text-align:center">KASSA MƏXARİC ORDERİ №</h1>
+        <h6 style="text-align:center">"<span style="text-decoration:underline;">Day</span>"<span style="text-decoration:underline;">Month</span><span style="text-decoration:underline;">  Year</span> İl</h6>
+        <h2>Verilsin_______________________________________________________________</h2><br />
+        <h2>Əsas___________________________________________________________________</h2><br />
+        <h2>_______________________________________________________________________</h2><br />
+        <h2>Əlavə____________________________________________________________________________________________________________________________________</h2><br />
+        <h2>Rəhbər____________________________________________________________________________________________________________________________________</h2><br />
+        <h2>Baş(böyük)mühasib____________________________________________________________________________________________________________________________________</h2><br />
+        <h2>Aldı____________________________________________________________________________________________________________________________________</h2><br />
+        <div><span>"___"________200_il</span><span>İmza___________</span></div>
+        <span>___________________________________________________________________________________________________________________________________________________</span>
+        <span>___________________________________________________________________________________________________________________________________________________</span>
+        <h2>Verdi xəzinadar _____________________________________________________________________________________________________________________________</h2>
+    </div>
+</div>*@
+
+<div class="card" id="costDetail" hidden>
+    <div class="card-body">
+        <h4 style="text-align: center;">KASSA MƏXARİC ORDERİ</h4>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tarix : @DateTime.Now.Date.ToString("dd/MM/yyyy") il&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;№@Html.DisplayFor(model => model.Id)</h5>
+        <h5 style="text-align:center;margin-bottom:-30px;">@Html.DisplayFor(model => model.Explanation)&nbsp; </h5>
+        <h5 style="text-align: center;">Verilsin_______________________________________________________________<br /><p style="font-size:13px;">(Soyadı,adı,atasının adı)</p></h5>
+        <h5 style="text-align:center;margin-bottom:-30px;"><span id="samountWord"></span>&nbsp;<span id="sPennyAmountWord"></span></h5>
+        <h5 style="text-align: center;">Əsas_________________________________________________________________</h5>
+        <h5 style="text-align: center;">________________________________________________________@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))man._@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))qəp.<br /><p style="font-size:13px;">(Yazı ilə)</p></h5>
+        <h5 style="text-align:center;margin-bottom:-30px;">@Html.DisplayFor(model => model.Explanation2) (@Html.DisplayFor(model => model.CostType.Defenition)) &nbsp; </h5>
+        <h5 style="text-align: center;">Əlavə________________________________________________________________</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rəhbər_______________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Baş(b&ouml;y&uuml;k)m&uuml;hasib________________</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align:center;margin-bottom:-30px;"><span id="amountWord"></span>&nbsp;<span id="PennyAmountWord"></span></h5>
+        <h5 style="text-align: center;">Aldı____________________________________________________@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))man._@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))qəp.<br /><p style="font-size:13px;">(Yazı ilə)</p></h5>
+        @*<h2>&nbsp; &nbsp;__________________________________________________________________&nbsp; ___________________</h2>*@
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"___"___________20__il&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;İmza_____________</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align:center;margin-bottom:-30px;">@Html.DisplayFor(model => model.Explanation3)</h5>
+        <h5 style="text-align: center;">_____________________________________________________________________<br /><p style="font-size:13px;">(Alanın şəxsiyyətini bildirən sənədin adı,n&ouml;mrəsi,verildiyi tarix və yer)</p></h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align: left;margin-left: 31%;margin-bottom: -32px;">Xəlilova Çinarə</h5>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Verdi xəzinədar_______________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;İmza_____________</h5>
+        <h5 style="text-align: center;">-----------------------------------------------------------------------------------------------------------------------&nbsp;</h5>
+        <h4 style="text-align: center;">KASSA MƏXARİC ORDERİ</h4>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tarix : @DateTime.Now.Date.ToString("dd/MM/yyyy") il&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;№@Html.DisplayFor(model => model.Id)</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align:center;margin-bottom:-30px;">@Html.DisplayFor(model => model.Explanation)</h5>
+        <h5 style="text-align: center;">Verilsin_______________________________________________________________<br /><p style="font-size:13px;">(Soyadı,adı,atasının adı)</p></h5>
+        <h5 style="text-align:center;margin-bottom:-30px;"><span id="samountWord2"></span>&nbsp;<span id="sPennyAmountWord2"></span></h5>
+        <h5 style="text-align: center;">Əsas_________________________________________________________________</h5>
+        <h5 style="text-align: center;">________________________________________________________@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))man._@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))qəp.<br /><p style="font-size:13px;">(Yazı ilə)</p></h5>
+        <h5 style="text-align:center;margin-bottom:-30px;">@Html.DisplayFor(model => model.Explanation2) (@Html.DisplayFor(model => model.CostType.Defenition))</h5>
+        <h5 style="text-align: center;">Əlavə________________________________________________________________</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rəhbər_______________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Baş(b&ouml;y&uuml;k)m&uuml;hasib________________</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align:center;margin-bottom:-30px;"><span id="amountWord2"></span>&nbsp;<span id="PennyAmountWord2"></span></h5>
+        <h5 style="text-align: center;">Aldı____________________________________________________@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))man._@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))qəp.<br /><p style="font-size:13px;">(Yazı ilə)</p></h5>
+        @*<h2>&nbsp; &nbsp;__________________________________________________________________&nbsp; ___________________</h2>*@
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"___"___________20__il&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;İmza_____________</h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align:center;margin-bottom:-30px;">@Html.DisplayFor(model => model.Explanation3)</h5>
+        <h5 style="text-align: center;">_____________________________________________________________________<br /><p style="font-size:13px;">(Alanın şəxsiyyətini bildirən sənədin adı,n&ouml;mrəsi,verildiyi tarix və yer)</p></h5>
+        <p style="text-align: center;">&nbsp;</p>
+        <h5 style="text-align: left;margin-left: 31%;margin-bottom: -32px;">Xəlilova Çinarə</h5>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Verdi xəzinədar_______________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;İmza_____________</h5>
+    </div>
+</div>

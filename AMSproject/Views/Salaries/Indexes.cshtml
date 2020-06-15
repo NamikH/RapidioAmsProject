@@ -1,0 +1,24 @@
+﻿
+
+@{
+    ViewData["Title"] = "Indexes";
+}
+
+
+
+<table border="1" cellpadding="2" cellspacing="2">
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Explanation</th>
+        
+    </tr>
+    @foreach (var users in ViewBag.users)
+    {
+        <tr>
+            <td>@users.Name</td>
+            <td>@users.Surname</td>
+            <td>@users.Explanation</td>
+        </tr>
+    }
+</table>

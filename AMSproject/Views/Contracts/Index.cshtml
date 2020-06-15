@@ -1,0 +1,357 @@
+﻿@model IEnumerable<AMS.Models.Contract>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@{ int id1 = 0;}
+@{ int id2 = 0;}
+
+
+
+<!-- end: TOOLBAR -->
+<!-- end: PAGE HEADER -->
+<!-- start: BREADCRUMB -->
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Tənzimləmələr
+            </li>
+            <li class="active">
+                Müştəri parametrləri
+            </li>
+            <li class="active">
+                Müqavilələr
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: PAGE CONTENT -->
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- start: BASIC TABLE PANEL -->
+        <div class="panel panel-white">
+            <div class="panel-heading">
+                <div class="panel-tools">
+                    <div class="dropdown">
+                        <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                            <li>
+                                <a class="panel-collapse collapses" href="#"><i class="fa fa-angle-up"></i> <span>Collapse</span> </a>
+                            </li>
+                            <li>
+                                <a class="panel-refresh" href="#"> <i class="fa fa-refresh"></i> <span>Refresh</span> </a>
+                            </li>
+                            <li>
+                                <a class="panel-config" href="#panel-config" data-toggle="modal"> <i class="fa fa-wrench"></i> <span>Configurations</span></a>
+                            </li>
+                            <li>
+                                <a class="panel-expand" href="#"> <i class="fa fa-expand"></i> <span>Fullscreen</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a class="btn btn-xs btn-link panel-close" href="#"> <i class="fa fa-times"></i> </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <a class="btn btn-primary" data-toggle="modal" data-target="#customer1" onclick="addNewContract()"><i class="fa fa-plus"></i> Yeni müqavilə</a>
+                <div class="table-responsive">
+                    <table id="sample_2" class="table table-striped table-hover" style="border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th>Müştəri</th>
+                                <th>Müqavilə №</th>
+                                <th>Qeyd</th>
+                                <th>Ödəniş tarixi</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="setIncomeList">
+                            @foreach (var item in Model)
+                            {
+                                <tr data-toggle="collapse" data-target="#demo@(id1+=1)" class="accordion-toggle">
+                                    <td>@Html.DisplayFor(modelItem => item.Customers.Name) &nbsp; @Html.DisplayFor(modelItem => item.Customers.Surname)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                                    <td class="center">
+                                        <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                            @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.2.1") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                            {<a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditContract(@item.Id)"><i class="fa fa-edit"></i></a>}
+                                            @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.2.2") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                            {<a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Sil"><i class="fa fa-times fa fa-white"></i></a>}
+                                        </div>
+                                        <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                            <div class="btn-group">
+                                                <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
+                                                </a>
+                                                <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                                    <li>
+                                                        <a role="menuitem" tabindex="-1" onclick="EditContract(@item.Id)">
+                                                            <i class="fa fa-edit"></i> Dəyişdir
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a role="menuitem" tabindex="-1" href="#">
+                                                            <i class="fa fa-times"></i> Sil
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="hiddenRow">
+                                        <div id="demo@(id2+=1)" class="accordian-body collapse" style="width:93%;margin-left:4% !important;margin-top:6px;">
+                                            <a class="btn btn-primary" data-toggle="modal" data-target="#customer1" onclick="addNewDetail(@item.Id)"><i class="fa fa-plus"></i> Xidmət əlavə et</a>
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Obyekt</th>
+                                                        <th>Xidmət növü</th>
+                                                        <th>Xidmət haqqı</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var detail in item.ContractDetail)
+                                                    {
+
+                                                        <tr>
+                                                            <td>@detail.ObjectsId</td>
+                                                            <td>@detail.SupportType.Defenition</td>
+                                                            <td>@detail.ServicePrice</td>
+                                                            <td>
+                                                                @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.3.1") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                                                {
+                                                                    <a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditDetail(@detail.Id)">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
+                                                                }
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- end: BASIC TABLE PANEL -->
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-handshake"></i>&nbsp; Yeni müqavilə</h4>
+            </div>
+            <div class="modal-body" id="myModalBodyDiv1">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditContract">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Müqavilə (dəyişdir)</h4>
+            </div>
+            <div class="modal-body" id="myEditContract">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditDetail">
+    <div class="modal-dialog modal-lg" style=" width 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Xidmət (dəyişdir)</h4>
+            </div>
+            <div class="modal-body" id="myEditDetail">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddContractDetail">
+    <div class="modal-dialog modal-lg" style=" width 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Yeni xidmət</h4>
+            </div>
+            <div class="modal-body" id="myAddContractDetail">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nOrderModal">
+    <div class="modal-dialog modal-lg" style=" width 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Yeni müqavilə</h4>
+            </div>
+            <form id="NewOrderForm">
+                <div class="modal-body">
+                    @*Customer Details*@
+                    <h5 style="color:#ff6347">Müqavilə</h5>
+                    <hr />
+                    <div class="form-horizontal">
+                        <input type="hidden" id="CustomerId" />
+                        <div class="form-group">
+                            <label class="control-label col-md-1">
+                                Müştəri
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" id="customer" name="customer" placeholder="Müştəri" class="form-control" />
+                            </div>
+                            <label class="control-label col-md-1">
+                                Qeyd
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" id="notes" name="notes" placeholder="Qeyd" class="form-control" />
+                            </div>
+                            <label class="control-label col-md-1">
+                                Ödəniş tarixi
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" id="paymentDate" name="paymentDate" placeholder="Ödəniş tarixi" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Order Details*@
+                    <h5 style="margin-top:10px;color:#ff6347">Xidmətlər</h5>
+                    <hr />
+                    <div class="form-horizontal">
+                        <input type="hidden" id="OrderId" />
+                        <div class="form-group">
+                            <label class="control-label col-md-1">
+                                Xidmət növü
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" id="supportType" name="supportType" placeholder="Xidmət növü" class="form-control" />
+                            </div>
+                            <label class="control-label col-md-1">
+                                Obyekt
+                            </label>
+                            <div class="col-md-3">
+                                <input type="number" id="object" name="object" placeholder="Obyekt" class="form-control" />
+                            </div>
+                            <label class="control-label col-md-1">
+                                Xidmət haqqı
+                            </label>
+                            <div class="col-md-3">
+                                <input type="number" id="servicePrice" name="servicePrice" placeholder="Xidmət haqqı" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="text-align:right">
+                            <div class="col-md-12">
+                                <a id="addToList" class="btn btn-primary">Əlavə et</a>
+                            </div>
+                        </div>
+
+                        <table id="detailsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:30%">Obyekt</th>
+                                    <th style="width:10%">Xidmət növü</th>
+                                    <th style="width:25%">Xidmət haqqı</th>
+                                    <th style="width:10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Ləğv et</button>
+                    <button id="saveOrder" type="submit" class="btn btn-danger">Yadda saxla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .table tr {
+        cursor: pointer;
+    }
+
+    .hiddenRow {
+        padding: 0 4px !important;
+        background-color: #eeeeee;
+        font-size: 13px;
+    }
+</style>
+
+<script>
+    function addNewDetail(id) {
+        var url = "/Contracts/AddContractDetail?id=" + id;
+        $("#myAddContractDetail").load(url, function () {
+            $("#AddContractDetail").modal("show");
+            $('.selectpicker').selectpicker();
+        })
+    }
+    function addNewContract() {
+        var url = "/Contracts/NewOrder";
+        $("#myModalBodyDiv1").load(url, function () {
+            $("#myModal1").modal("show");
+            $('.selectpicker').selectpicker();
+        })
+    }
+
+    function EditContract(id) {
+        var url = "/Contracts/EditContract?Id=" + id;
+        $("#myEditContract").load(url, function () {
+            $("#EditContract").modal("show");
+            $('.selectpicker').selectpicker();
+        })
+    }
+
+    function EditDetail(id) {
+        var url = "/Contracts/EditContractDetail?Id=" + id;
+        $("#myEditDetail").load(url, function () {
+            $("#EditDetail").modal("show");
+            $('.selectpicker').selectpicker();
+        })
+    }
+
+
+</script>
+
+

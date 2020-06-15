@@ -1,0 +1,89 @@
+﻿@model IEnumerable<AMS.Models.Payments>
+
+@{
+    ViewData["Title"] = "SalaryImport";
+}
+
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="active">
+                    Əməliyyatlar
+                </li>
+                <li class="active">
+                    Əmək haqqı
+                </li>
+            </ol>
+        </div>
+    </div>
+
+<div class="panel-white">
+    <div class="panel-body">
+        @using (Html.BeginForm("Import", "Salaries", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+            <div class="form-group">
+                @Html.Raw(ViewBag.Error)
+
+                <div data-provides="fileupload" class="fileupload fileupload-new">
+                    <span class="btn btn-file btn-light-grey">
+                        <i class="fa fa-folder-open-o"></i> <span class="fileupload-new">Faylı seçin</span><span class="fileupload-exists">Dəyişdir</span>
+                        <input type="file" name="excelFile">
+                    </span>
+                    <span class="fileupload-preview"></span>
+                    <a data-dismiss="fileupload" class="close fileupload-exists float-none" href="#">
+                        &times;
+                    </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="submit" value="Import" class="btn btn-primary waves-effect waves-light mr-1">Yadda saxla</button>
+                    <button type="reset" class="btn btn-info waves-effect waves-light mr-1" onclick="location.href='@Url.Action("Download","Salaries")'">Şablon yüklə</button>
+                </div>
+            </div>
+            @*<input type="submit" value="Import" />*@
+
+        }
+    </div>
+</div>
+
+
+
+<div class="panel-white">
+    <div class="panel-body">
+        <div class="table-rep-plugin">
+            <div class="table-responsive mb-0" @*data-pattern="priority-columns" *@>
+                <table id="tech-companies-1" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Məbləğ</th>
+                            <th>Açıqlama</th>
+                            <th>Kassa</th>
+                            <th>Müqavilə №</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var users in ViewBag.users)
+                        {
+                        <tr>
+                            <td>@users.Amount</td>
+                            <td>@users.Explanation</td>
+                            <td>@users.CashId</td>
+                            <td>@users.ContractDetailId</td>
+                        </tr>
+                        }
+
+                        @*<tr>
+                                <th>GOOG <span class="co-name">Google Inc.</span></th>
+                                <td>597.74</td>
+                                <td>12:12PM</td>
+                                <td>14.81 (2.54%)</td>
+                                <td>582.93</td>
+                                <td>597.95</td>
+                                <td>597.73 x 100</td>
+                                <td>597.91 x 300</td>
+                                <td>731.10</td>
+                            </tr>*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

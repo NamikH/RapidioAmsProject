@@ -1,0 +1,96 @@
+﻿@model AMS.Models.Users
+
+<div>
+    <form id="NewOrderForm">
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <input type="hidden" id="CustomerId" />
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-md-2">
+                            İstifadəçi adı
+                        </label>
+                        <div class="col-md-10">
+                            <input asp-for="Username" id="userName" placeholder="İstifadəçi adı" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:1% !important">
+                        <label class="control-label col-md-2">
+                            Şifrə
+                        </label>
+                        <div class="col-md-10">
+                            <input asp-for="Password" id="pass" placeholder="Şifrə" class="form-control" />
+                        </div>
+                    </div>
+                        <div class="checkbox row">
+                            <label class="control-label col-md-3">
+                                Administrator
+
+                            </label>
+                            <div class="col-md-9">
+                                <input asp-for="IsAdmin" id="perm" />
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Ləğv et</button>
+            <button id="saveOrder" type="submit" class="btn btn-danger">Yadda saxla</button>
+        </div>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    function saveOrder(data) {
+        return $.ajax({
+            method: 'post',
+            url: "/Users/NewUser",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+
+
+        var data = [{ Username: $("#userName").val(), Password: $("#pass").val(), IsAdmin: Boolean($("#perm").val()) }]
+
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+</script>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+

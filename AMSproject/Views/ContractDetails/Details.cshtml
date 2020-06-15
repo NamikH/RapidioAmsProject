@@ -1,0 +1,42 @@
+﻿@model AMS.Models.ContractDetail
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ContractDetail</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ServicePrice)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ServicePrice)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contract)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contract.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SupportType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SupportType.Defenition)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Objects)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Objects.Floor)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

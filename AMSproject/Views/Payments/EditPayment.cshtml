@@ -1,0 +1,161 @@
+﻿@model AMS.Models.Payments
+
+
+<div>
+    <form id="NewOrderForm">
+        <div class="modal-body">
+            
+            <div class="form-horizontal">
+                <input type="hidden" id="CustomerId" />
+                <div class="form-group">
+                    <input type="hidden" asp-for="Id" id="id" />
+                    <div class="row" style="margin-bottom:1%">
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Məbləğ
+                        </label>
+                        <div class="col-md-10">
+                            <input asp-for="Amount" type="text" id="amount" name="number" placeholder="Məbləğ" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:1%" >
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Açıqlama
+                        </label>
+                        <div class="col-md-10">
+                            <input asp-for="Explanation" type="text" id="exp1" name="number" placeholder="Açıqlama" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Açıqlama 2
+                        </label>
+                        <div class="col-md-10">
+                            <input asp-for="Explanation2" type="text" id="exp2" name="exp2" placeholder="Açıqlama 2" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Açıqlama 2
+                        </label>
+                        <div class="col-md-10">
+                            <input asp-for="Explanation3" type="text" id="exp3" name="exp3" placeholder="Açıqlama 2" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            
+                        </label>
+                        <div class="col-md-10">
+                            <select asp-for="ContractDetailId" id="detailId" class="form-control" asp-items="ViewBag.ContractDetailId"></select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:1%"  hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Hərəkət&nbsp;növü
+                        </label>
+                        <div class="col-md-10">
+                            
+                            <select asp-for="TransactionTypeId" id="trTypeId" class="form-control" asp-items="ViewBag.TransactionTypeId"></select>
+
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:1%"  hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Hərəkət&nbsp;tipi
+                        </label>
+                        <div class="col-md-10">
+                            <select asp-for="SignTypeId" id="sgTypeId" class="form-control" asp-items="ViewBag.SignTypeId"></select>
+
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom:1%"  hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Kassa
+                        </label>
+                        <div class="col-md-10">
+                            <select asp-for="CashId" id="csId" class="form-control" asp-items="ViewBag.CashId"></select>
+
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:1% !important"  hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Mədaxil&nbsp;növü
+                        </label>
+                        <div class="col-md-10">
+                            <select asp-for="CostTypeId" id="costTypId" class="form-control" asp-items="ViewBag.CostTypeId"></select>
+
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:1% !important"  hidden>
+                        <label class="control-label col-md-2" style="text-align:left !important">
+                            Məxaric&nbsp;növü
+                        </label>
+                        <div class="col-md-10">
+                            <select asp-for="IncomeTypeId" id="incomeTypId" class="form-control" asp-items="ViewBag.IncomeTypeId"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Ləğv et</button>
+            <button id="saveOrder" type="submit" class="btn btn-danger">Yadda saxla</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    function saveOrder(data) {
+        return $.ajax({
+            method: 'post',
+            url: "/Payments/EditPayment",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+
+        var data = [{
+            Id: parseInt($("#id").val()),
+            Amount: parseFloat($("#amount").val()),
+            Explanation: $("#exp1").val(),
+            Explanation2: $("#exp2").val(),
+            Explanation3: $("#exp3").val(),
+            TransactionTypeId: parseInt($("#trTypeId").val()),
+            SignTypeId: parseInt($("#sgTypeId").val()),
+            CashId: parseInt($("#csId").val()),
+            CostTypeId: parseInt($("#costTypeId").val()),
+            ContractDetailId: parseInt($("#detailId").val()),
+            IncomeTypeId: parseInt($("#incomeTypId").val())
+        }]
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+

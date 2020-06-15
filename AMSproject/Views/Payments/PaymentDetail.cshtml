@@ -1,0 +1,279 @@
+﻿@model AMS.Models.Payments
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<script>
+    function printDiv(divName) {
+
+         var a = convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount))));
+        $('amountWord').empty();
+        document.getElementById('amountWord').append(convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))) + 'manat')
+        if (@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100)) != 0)
+        {
+             $('PennyAmountWord').empty();
+            document.getElementById('PennyAmountWord').append(convertNumberToWords(@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))) + 'qəpik')
+        }
+        $('samountWord').empty();
+        document.getElementById('samountWord').append(convertNumberToWords(@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))) + 'manat')
+        if (@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100)) != 0)
+        {
+             $('sPennyAmountWord').empty();
+            document.getElementById('sPennyAmountWord').append(convertNumberToWords(@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))) + 'qəpik')
+        }
+
+        console.log(a)
+
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+        window.location.reload(true);
+
+        function convertNumberToWords(amount) {
+            var words = new Array();
+            words[0] = '';
+            words[1] = 'bir';
+            words[2] = 'iki';
+            words[3] = 'üc';
+            words[4] = 'dörd';
+            words[5] = 'beş';
+            words[6] = 'altı';
+            words[7] = 'yeddi';
+            words[8] = 'səkkiz';
+            words[9] = 'doqquz';
+            words[10] = 'on';
+            words[11] = 'on bir';
+            words[12] = 'on iki';
+            words[13] = 'on üç';
+            words[14] = 'on dörd';
+            words[15] = 'on beş';
+            words[16] = 'on altı';
+            words[17] = 'on yeddi';
+            words[18] = 'on səkkiz';
+            words[19] = 'on doqquz';
+            words[20] = 'iyirmi';
+            words[30] = 'otuz';
+            words[40] = 'qırx';
+            words[50] = 'əlli';
+            words[60] = 'altımısh';
+            words[70] = 'yetmish';
+            words[80] = 'səksən';
+            words[90] = 'doxsan';
+            amount = amount.toString();
+            var atemp = amount.split(".");
+            var number = atemp[0].split(",").join("");
+            var n_length = number.length;
+            var words_string = "";
+            if (n_length <= 9) {
+                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+                var received_n_array = new Array();
+                for (var i = 0; i < n_length; i++) {
+                    received_n_array[i] = number.substr(i, 1);
+                }
+                for (var i = 9 - n_length, j = 0; i < 9; i++, j++) {
+                    n_array[i] = received_n_array[j];
+                }
+                for (var i = 0, j = 1; i < 9; i++, j++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) {
+                        if (n_array[i] == 1) {
+                            n_array[j] = 10 + parseInt(n_array[j]);
+                            n_array[i] = 0;
+                        }
+                    }
+                }
+                value = "";
+                for (var i = 0; i < 9; i++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) {
+                        value = n_array[i] * 10;
+                    } else {
+                        value = n_array[i];
+                    }
+                    if (value != 0) {
+                        words_string += words[value] + " ";
+                    }
+                    if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Crores ";
+                    }
+                    if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "Lakhs ";
+                    }
+                    if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) {
+                        words_string += "min ";
+                    }
+                    if (i == 6 && value != 0 && (n_array[i + 1] != 0 && n_array[i + 2] != 0)) {
+                        words_string += "yüz ";
+                    } else if (i == 6 && value != 0) {
+                        words_string += "yüz ";
+                    }
+                }
+                words_string = words_string.split("  ").join(" ");
+            }
+            return words_string;
+        }
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Əməliyyatlar
+            </li>
+            <li class="active">
+                Kassa əməliyyatları
+            </li>
+            <li class="active">
+                Ödənişlər
+            </li>
+            <li class="active">
+                Ödəniş qaiməsi
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="panel-white">
+    <div class="panel-heading" style="margin-bottom:-3%;padding-top:0%;">
+        <div class="panel-body">
+            <h2>Ödənişlər</h2>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    Ad :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Name)
+                </dd>
+                <dt>
+                    Soyad :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Surname)
+                </dd>
+                <dt>
+                    Müqavilə № :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ContractDetail.Contract.Id)
+                </dd>
+                <dt>
+                    Xidmət növü :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ContractDetail.SupportType.Defenition)
+                </dd>
+                <dt>
+                    Məbləğ :
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Amount)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="form-group mb-0">
+            <div>
+                <button type="submit" class="btn btn-primary waves-effect waves-light mr-1" onclick="printDiv('payDetail')">Çap et</button>
+                <button type="reset" class="btn btn-secondary waves-effect" onclick="location.href='@Url.Action("CashOperation","Payments")'">Ana səifə</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="card modal-content" id="payDetai" style="display:none">
+    <div class="card-body">
+        <h3 class="text-center m-0">
+            <a href="index.html" class="logo logo-admin">
+                <img src="~/assets/images/xalq.png" width="300px" height="100px" alt="logo">
+            </a>
+        </h3>
+        <div class="p-3 text-center">
+            <form class="form-horizontal m-t-30" action="https://themesbrand.com/lexa/html/vertical/index.html">
+                <div class="form-group">
+                    <label for="username"><h5><i style="font-weight:bold">Müştəri : @Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Name) @Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Surname)</i></h5></label>
+                </div>
+                <div class="form-group">
+                    <label for="username"><h5><i style="font-weight:bold">Xidmət növü :  @Html.DisplayFor(model => model.ContractDetail.SupportType.Defenition)</i></h5></label>
+                </div>
+                <div class="form-group">
+                    <label for="username"><h5><i style="font-weight:bold">Müqavilə № :  @Html.DisplayFor(model => model.ContractDetail.Contract.Id)</i></h5></label>
+                </div>
+                <div class="form-group">
+                    <label for="username"><h5><i style="font-weight:bold">Məbləğ :  @Html.DisplayFor(model => model.Amount) AZN</i> </h5></label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="card" id="payDetail" hidden>
+    <div class="card-body">
+        <h4 style="text-align: center;"><strong>"FAKTOR QRUP-S" MMC</strong></h4>
+        <h4 style="text-align: center;"><strong>V&Ouml;EN 1001139421</strong></h4>
+        <h4 style="text-align: center;"><strong>KASSA MƏDAXİL ORDERİ</strong></h4>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tarix : @DateTime.Now.Date.ToString("dd/MM/yyyy") il&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;№@Html.DisplayFor(model => model.Id)</h5>
+        <h6 style="text-align: center;margin-bottom:-3%">@Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Name) @Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Surname)</h6>
+        <h5 style="text-align: center;">Kimdən________________________________________________________________________________<br /><p style="font-size:13px;">(pul &ouml;dəyənin vəzifəsi,soyadı,adı,atadının adı</p></h5>
+        <h6 style="text-align: center;margin-bottom:-3%">@Html.DisplayFor(model => model.ContractDetail.Contract.Customers.DocNumber)</h6>
+        <h5 style="text-align: center;">______________________________________________________________________________________<br /><p style="font-size:13px;">şəxsiyyətini təsdiq edən sənəd,&uuml;nvan)</p></h5>
+        <h6 style="text-align: center;margin-bottom:-3%">@Html.DisplayFor(model => model.ContractDetail.SupportType.Defenition)</h6>
+        <h5 style="text-align: center;">&nbsp;Nə&nbsp; &uuml;&ccedil;&uuml;n_______________________________________________________________________________&nbsp;<br /><p style="font-size:13px;">(məqsədi aydın yazmaq)</p></h5>
+        <h6 style="text-align: center;margin-bottom:-3%">Bina : @Html.DisplayFor(model => model.ContractDetail.Objects.Building.Address),Blok : @Html.DisplayFor(model => model.ContractDetail.Objects.Porch),Mərtəbə : @Html.DisplayFor(model => model.ContractDetail.Objects.Floor),Obyekt №@Html.DisplayFor(model => model.ContractDetail.Objects.Number)  </h6>
+        <h5 style="text-align: center;">Ünvan_______________________________________________________________________________&nbsp;<br /><p style="font-size:13px;">(məqsədi aydın yazmaq)</p></h5>
+        <h6 style="text-align: center;">&nbsp;</h6>
+        <h5 style="text-align:center;margin-bottom:-30px;"><span id="amountWord"></span>&nbsp;<span id="PennyAmountWord"></span></h5>
+        <h5 style="text-align: center;">&nbsp;Məbləğ________________________________________________________________________________&nbsp;<br /><p style="font-size:13px;">(rəqəm və yazı ilə tam aydın g&ouml;stərmək)</p></h5>
+        <h5 style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;_______________________________________________________________@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))man.___@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))qəp.<br />&nbsp;&nbsp;&nbsp;&nbsp;Kassaya mədaxil edilmişdir</h5>
+        <div style="margin-bottom:-104px">
+            <h5 style="text-align:right;padding-right: 12%;padding-top:-2%;">İmza</h5>
+            <h5 style="text-align:right;padding-right: 6%;margin-top:2%">Müştəri ___________________</h5>
+            <h5 style="text-align:right;padding-right: 6%;margin-top:4%;">Xəzinədar __________________</h5>
+        </div>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rəhbər</h5>
+        <h5>&nbsp;&nbsp;&nbsp;M.Y.&nbsp; &nbsp;Baş mühasib</h5>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Xəzinədar</h5>
+        <h5 style="text-align:left;text-decoration:underline;margin-left: 20%;margin-top: -33px;">Xəlilova Çinarə</h5>
+        <h5 style="text-align: center;">---------------------------------------------------------------------------------------------------------------------------------&nbsp;</h5>
+        <h4 style="text-align: center;"><strong>"FAKTOR QRUP-S" MMC</strong></h4>
+        <h4 style="text-align: center;"><strong>V&Ouml;EN 1001139421</strong></h4>
+        <h4 style="text-align: center;"><strong>KASSA MƏDAXİL ORDERİNİN QƏBZİ</strong></h4>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tarix : @DateTime.Now.Date.ToString("dd/MM/yyyy") il&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;№@Html.DisplayFor(model => model.Id)</h5>
+        <h6 style="text-align: center;margin-bottom:-3%">@Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Name) @Html.DisplayFor(model => model.ContractDetail.Contract.Customers.Surname)</h6>
+        <h5 style="text-align: center;">Kimdən________________________________________________________________________________<br /><p style="font-size:13px;">(pul &ouml;dəyənin vəzifəsi,soyadı,adı,atadının adı</p></h5>
+        <h6 style="text-align: center;margin-bottom:-3%">@Html.DisplayFor(model => model.ContractDetail.Contract.Customers.DocNumber)</h6>
+        <h5 style="text-align: center;">______________________________________________________________________________________<br /><p style="font-size:13px;">şəxsiyyətini təsdiq edən sənəd,&uuml;nvan)</p></h5>
+        <h6 style="text-align: center;margin-bottom:-3%">@Html.DisplayFor(model => model.ContractDetail.SupportType.Defenition)</h6>
+        <h5 style="text-align: center;">&nbsp;Nə&nbsp; &uuml;&ccedil;&uuml;n_______________________________________________________________________________&nbsp;<br /><p style="font-size:13px;">(məqsədi aydın yazmaq)</p></h5>
+        <h6 style="text-align: center;margin-bottom:-3%">Bina : @Html.DisplayFor(model => model.ContractDetail.Objects.Building.Address),Blok : @Html.DisplayFor(model => model.ContractDetail.Objects.Porch),Mərtəbə : @Html.DisplayFor(model => model.ContractDetail.Objects.Floor),Obyekt №@Html.DisplayFor(model => model.ContractDetail.Objects.Number)  </h6>
+        <h5 style="text-align: center;">Ünvan_______________________________________________________________________________&nbsp;<br /><p style="font-size:13px;">(məqsədi aydın yazmaq)</p></h5>
+        <h6 style="text-align: center;">&nbsp;</h6>
+        <h5 style="text-align:center;margin-bottom:-30px;"><span id="samountWord"></span>&nbsp;<span id="sPennyAmountWord"></span></h5>
+        <h5 style="text-align: center;">&nbsp;Məbləğ________________________________________________________________________________&nbsp;<br /><p style="font-size:13px;">(rəqəm və yazı ilə tam aydın g&ouml;stərmək)</p></h5>
+        <h5 style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;_______________________________________________________________@Math.Truncate(Convert.ToDecimal(@Html.ValueFor(model => model.Amount)))man.___@((int)(((decimal)Convert.ToDecimal(@Html.ValueFor(model => model.Amount))%1) *100))qəp.<br />&nbsp;&nbsp;&nbsp;&nbsp;Kassaya mədaxil edilmişdir</h5>
+        <div style="margin-bottom:-104px">
+            <h5 style="text-align:right;padding-right: 12%;padding-top:-2%;">İmza</h5>
+            <h5 style="text-align:right;padding-right: 6%;margin-top:2%">Müştəri ___________________</h5>
+            <h5 style="text-align:right;padding-right: 6%;margin-top:4%;">Xəzinədar __________________</h5>
+        </div>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rəhbər</h5>
+        <h5>&nbsp;&nbsp;&nbsp;M.Y.&nbsp; &nbsp;Baş mühasib</h5>
+        <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Xəzinədar</h5>
+        <h5 style="text-align:left;text-decoration:underline;margin-left: 20%;margin-top: -33px;">Xəlilova Çinarə</h5>
+    </div>
+</div>

@@ -1,0 +1,173 @@
+﻿@model AMS.Models.ContractDetail
+@*<h4>ContractDetail</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="View">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ContractId" class="control-label"></label>
+                    <select asp-for="ContractId" class ="form-control" asp-items="ViewBag.ContractId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SupportTypeId" class="control-label"></label>
+                    <select asp-for="SupportTypeId" class ="form-control" asp-items="ViewBag.SupportTypeId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ServicePrice" class="control-label"></label>
+                    <input asp-for="ServicePrice" class="form-control" />
+                    <span asp-validation-for="ServicePrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ObjectsId" class="control-label"></label>
+                    <select asp-for="ObjectsId" class ="form-control" asp-items="ViewBag.ObjectsId"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>*@
+
+
+
+<div>
+    <form id="NewOrderForm">
+        <div class="modal-body">
+            @*Customer Details*@
+            <h5 style="color:#ff6347">Müqavilə</h5>
+            <hr />
+          
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Ləğv et</button>
+            <button id="saveOrder" type="submit" class="btn btn-danger">Yadda saxla</button>
+        </div>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $("#addToList").click(function (e) {
+        e.preventDefault();
+
+        //console.log($("#supportType").val());
+
+        //console.log(document.getElementById("test").value);
+        //console.log($("#servicePrice").val());
+
+        if ($.trim($("#supportTyp").val()) == "" || $.trim($("#obj").val()) == "" || $.trim($("#servicePrc").val()) == "") return;
+
+        var SupportTypeId = $("#supportTyp").val(),
+            ObjectsId = $("#obj").val(),
+            ServicePrice = $("#servicePrc").val(),
+            detailsTableBody = $("#detailsTable tbody");
+
+        var productItem = '<tr><td>' + SupportTypeId + '</td><td>' + ServicePrice + '</td><td>' + ObjectsId + '</td><td><a data-itemId="0" href="#" class="deleteItem">Sil</a></td></tr>';
+
+        detailsTableBody.append(productItem);
+        clearItem();
+    });
+    //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+    function clearItem() {
+        $("#supportTyp").val('');
+        $("#obj").val('');
+        $("#servicePrc").val('');
+    }
+    // After Add A New Order In The List, If You Want, You Can Remove It.
+    $(document).on('click', 'a.deleteItem', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        if ($(this).attr('data-itemId') == "0") {
+            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                $(this).remove();
+            });
+        }
+    });
+
+
+
+
+
+    function saveOrder(data) {
+        return $.ajax({
+            method: 'post',
+            url: "/Contracts/SaveContract",
+            data: data,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+
+        var orderArr = [];
+        var variables = [];
+        orderArr.length = 0;
+
+        $.each($("#detailsTable tbody tr"), function () {
+            orderArr.push({
+                SupportTypeId: parseInt($(this).find('td:eq(0)').html()),
+                ServicePrice: parseFloat($(this).find('td:eq(1)').html()),
+                ObjectsId: parseInt($(this).find('td:eq(2)').html())
+            });
+            //variables.push({
+            //    customer: parseInt($("#cust").val()),
+            //    notes: parseInt($("#note").val()),
+            //    paymentDate: parseInt($("#payDate").val())
+            //});
+
+        });
+
+
+
+
+        //var data = orderArr + variables;
+
+
+        var data = JSON.stringify({
+            contractDetails: orderArr,
+            CustomersId: parseInt($("#cust").val()),
+            Notes: $("#note").val(),
+            PaymentDate: $("#payDate").val()
+        })
+
+        //console.log(data);
+
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+</script>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+

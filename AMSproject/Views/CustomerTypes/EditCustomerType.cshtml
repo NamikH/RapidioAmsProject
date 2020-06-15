@@ -1,0 +1,69 @@
+﻿@model AMS.Models.CustomerType
+
+
+<div>
+    <form id="NewOrderForm">
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <input type="hidden" id="CustomerId" />
+                <div class="form-group">
+                    <input type="hidden" asp-for="Id" id="id"/>
+                    <label class="control-label col-md-2">
+                        Açıqlama
+                    </label>
+                    <div class="col-md-10">
+                        <input asp-for="Defenition" type="text" id="defenition" name="number" placeholder="Açıqlama" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Ləğv et</button>
+            <button id="saveOrder" type="submit" class="btn btn-danger">Yadda saxla</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    function saveOrder(data) {
+        return $.ajax({
+            method: 'post',
+            url: "/CustomerTypes/EditCustomerType",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (result) {
+                alert(result);
+                location.reload();
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+
+        var data = [{ Id: parseInt($("#id").val()), Defenition: $("#defenition").val()}]
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+

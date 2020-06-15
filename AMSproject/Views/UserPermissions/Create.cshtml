@@ -1,0 +1,272 @@
+﻿@model AMS.Models.UserPermissions
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Istifadəçi səlahiyyətləri</h2>
+@*<button id="sk">get</button>*@
+@*<h4>UserPermissions</h4>*@
+@*<hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+<div class="form-group">
+    <label asp-for="UserId" class="control-label">İstifadəçi adı</label>
+    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId" id="kt"></select>
+</div>
+@*<div class="form-group">
+                    <label asp-for="PermissionId" class="control-label"></label>
+                    <select asp-for="PermissionId" class="form-control" asp-items="ViewBag.PermissionId"></select>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="Acces" /> @Html.DisplayNameFor(model => model.Acces)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>*@
+
+@*<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+
+@*<div class="card">
+    <div class="card-body">
+        <ul class="list-group">
+            @foreach (var item in ViewBag.ItemList)
+            {
+                if (item.Permission.Number.Length == 1)
+                {
+                    <li class="list-group-item">
+                        <div class="form-check">
+                            - <input type="checkbox" id="Check_@item.PermissionId" checked="@item.Acces" value="@item.Id" name="vehicle1" />
+                            <label for="Check_@item.PermissionId">@item.Permission.Defenition</label>
+                        </div>
+                    </li>
+                }
+                if (item.Permission.Number.Length == 3)
+                {
+                    <li class="list-group-item">
+                        <div class="form-check">
+                            -- <input type="checkbox" id="Check_@item.PermissionId" checked="@item.Acces" value="@item.Id" name="vehicle1" />
+                            <label for="Check_@item.PermissionId">@item.Permission.Defenition</label>
+                        </div>
+                    </li>
+                }
+                if (item.Permission.Number.Length == 5)
+                {
+                    <li class="list-group-item">
+                        <div class="form-check">
+                            --- <input type="checkbox" id="Check_@item.PermissionId" checked="@item.Acces" value="@item.Id" name="vehicle1" />
+                            <label for="Check_@item.PermissionId">@item.Permission.Defenition</label>
+                        </div>
+                    </li>
+                }
+                if (item.Permission.Number.Length == 7)
+                {
+                    <li class="list-group-item">
+                        <div class="form-check">
+                            ---- <input type="checkbox" id="Check_@item.PermissionId" checked="@item.Acces" value="@item.Id" name="vehicle1" />
+                            <label for="Check_@item.PermissionId">@item.Permission.Defenition</label>
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>*@
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#sk").click(function () {
+            var favorite = [];
+            //var favorite = [{ a: true }, { a: true }, { a: false }];
+            $.each($("input[name='ch']:indeterminate"), function () {
+                favorite.push($(this).val());
+            });
+            console.log(favorite);
+            var data = [];
+            for (var t in favorite) {
+
+                data.push({ UserId: parseInt($("#kt").val()), Id: parseInt(favorite[t]), Access: 1 });
+
+            }
+            console.log(data);
+        });
+    });
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#sm").click(function () {
+            var favorite = [];
+            //var favorite = [{ a: true }, { a: true }, { a: false }];
+            $.each($("input[name='ch']:checked"), function () {
+                favorite.push($(this).val());
+            });
+            $.each($("input[name='ch']:indeterminate"), function () {
+                favorite.push($(this).val());
+            });
+            console.log(favorite);
+            var data = [];
+            for (var t in favorite) {
+
+                data.push({ UserId: parseInt($("#kt").val()), Id: parseInt(favorite[t]), Access: 1 });
+
+            }
+            console.log(data);
+            //var data = [{ UserId: 1,PermissionId: 2,Access: false},
+            //           { UserId: 1,PermissionId: 2,Access: false}]
+
+
+            $.ajax({
+                method: 'POST',
+                url: "/UserPermissions/SetPermission",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data)
+                }
+            });
+
+            //$ajax({
+            //    type: 'POST',
+            //    url: '/Userpermissions/Test',
+            //    dataType: 'json',
+            //    contentType: dataType,
+            //    data:data
+            //});
+
+
+        });
+    });
+
+</script>
+
+
+<div class="panel-white">
+        <div class="panel-body">
+            <!-- <div id="treeview_container" class="hummingbird-treeview"> -->
+            <ul id="treeview" class="hummingbird-base">
+                @foreach (var item in ViewBag.ItemList)
+                {
+                    <li>
+                        <i class="fa fa-minus"></i> <label for="Check_@item.PermissionId"> <input id="Check_@item.PermissionId"  type="checkbox" value="@item.Id" name="ch" checked="@item.Acces">@item.Permission.Defenition</label>
+                        <ul style="display: block;">
+                            @foreach (var item2 in ViewBag.ItemList2)
+                            {
+                                @if (item.Permission.Number.ToString() == item2.Permission.Number.ToString().Substring(0, 1))
+                                {
+                                    <li>
+                                        <i class="fa fa-minus"></i> <label for="Check_@item2.PermissionId"> <input id="Check_@item2.PermissionId"  type="checkbox" value="@item2.Id" name="ch" checked="@item2.Acces">@item2.Permission.Defenition</label>
+                                        <ul>
+                                            @foreach (var item3 in ViewBag.ItemList3)
+                                            {
+                                                @if (item2.Permission.Number.ToString() == item3.Permission.Number.ToString().Substring(0, 3))
+                                                {
+                                                    <li>
+                                                        <label for="Check_@item3.PermissionId"> <input id="Check_@item3.PermissionId" data-id="custom-1-1" type="checkbox" value="@item3.Id" name="ch" checked="@item3.Acces" />@item3.Permission.Defenition</label>
+
+                                                        <ul>
+                                                            @foreach (var item4 in ViewBag.ItemList4)
+                                                            {
+                                                                @if (item3.Permission.Number.ToString() == item4.Permission.Number.ToString().Substring(0, 5))
+                                                                {
+                                                                    <li>
+                                                                        <label for="Check_@item4.PermissionId"> <input class="hummingbirdNoParent" id="Check_@item4.PermissionId" data-id="custom-2-1-1" type="checkbox" value="@item4.Id" name="ch" checked="@item4.Acces">@item4.Permission.Defenition</label>
+                                                                    </li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="panel-footer">
+            <div class="form-group mb-0">
+                <div>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light mr-1" id="sm">Yadda saxla</button>
+                    <button type="reset" class="btn btn-secondary waves-effect" onclick="location.href='@Url.Action("Index","Users")'">Ana səifə</button>
+                </div>
+            </div>
+        </div>
+</div>
+@*<button type="button">Get values</button>*@
+
+<script>
+    try {
+        fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", {
+            method: 'HEAD',
+            mode: 'no-cors'
+        })).then(function (response) {
+            return true;
+        }).catch(function (e) {
+            var carbonScript = document.createElement("script");
+            carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CE7DC2JW&placement=wwwcssscriptcom";
+            carbonScript.id = "_carbonads_js";
+            document.getElementById("carbon-block").appendChild(carbonScript);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+</script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="~/js/hummingbird-treeview.js"></script>
+<script>
+    $("#treeview").hummingbird();
+    $("#checkAll").click(function () {
+        $("#treeview").hummingbird("checkAll");
+    });
+    $("#uncheckAll").click(function () {
+        $("#treeview").hummingbird("uncheckAll");
+    });
+    $("#collapseAll").click(function () {
+        $("#treeview").hummingbird("collapseAll");
+    });
+    $("#checkNode").click(function () {
+        $("#treeview").hummingbird("checkNode", {
+            attr: "id",
+            name: "node-0-2-2",
+            expandParents: false
+        });
+    });
+</script>
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36251023-1']);
+    _gaq.push(['_setDomainName', 'jqueryscript.net']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>

@@ -1,0 +1,87 @@
+﻿@model AMS.Models.GetPaymentDuration
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>GetPaymentDuration</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomersId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CustomersId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractDetailId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContractDetailId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContractId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ObjectsId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ObjectsId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SupportTypeDefenition)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SupportTypeDefenition)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reason)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reason)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Pdid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Pdid)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

@@ -1,0 +1,282 @@
+﻿@model IEnumerable<AMS.Models.Customers>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    thead input {
+        width: 100%;
+    }
+</style>
+
+
+<!-- end: TOOLBAR -->
+<!-- end: PAGE HEADER -->
+<!-- start: BREADCRUMB -->
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Tənzimləmələr
+            </li>
+            <li class="active">
+                Müştəri parametrləri
+            </li>
+            <li class="active">
+                Müştərilər
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: PAGE CONTENT -->
+
+
+
+<div class="panel panel-white">
+
+    <div class="panel-heading">
+
+        <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#customer1" onclick="AddNewCustomer()"><i class="fa fa-plus"></i> Yeni müştəri</a>
+
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel-body">
+        <div class="table-responsive table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl" style="margin-bottom:0%" ;>
+            <table class="table table-bordered table-hover display" id="example" style="width:99.8%">
+                @*<table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse !important; border-spacing: 0 !important; width: 100% !important;">*@
+                <thead>
+                    <tr>
+                        <th>Ad</th>
+                        <th>Soyad</th>
+                        <th>Telefon</th>
+                        <th>Email</th>
+                        <th>Sənəd №</th>
+                        <th>Müştəri tipi</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Surname)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DocNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CustomerType.Defenition)</td>
+                            <td class="center">
+                                <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                    @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.1.1") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                    {<a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditCustomer(@item.Id)"><i class="fa fa-edit"></i></a>}
+                                    @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "2.3.1.2") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                    {<a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Sil"><i class="fa fa-times fa fa-white"></i></a>}
+                                </div>
+                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                    <div class="btn-group">
+                                        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" onclick="EditCustomer(@item.Id)">
+                                                    <i class="fa fa-edit"></i> Dəyişdir
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-times"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="readNote">
+    <div class="barTopSubview">
+        <a href="#newNote" class="new-note button-sv"><i class="fa fa-plus"></i> Add new note</a>
+    </div>
+    <div class="noteWrap col-md-8 col-md-offset-2">
+        <div class="panel panel-note">
+            <div class="e-slider owl-carousel owl-theme">
+                <div class="item">
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div hidden>
+    <!-- end: TOOLBAR -->
+    <!-- end: PAGE HEADER -->
+    <!-- start: BREADCRUMB -->
+    <!-- end: BREADCRUMB -->
+    <!-- start: PAGE CONTENT -->
+    <div class="panel-white" hidden>
+        <div class="panel-body">
+
+
+            <form>
+
+                <div class="form-group">
+                    <label class="control-label">Əməliyyat növün seçin</label>
+                    <select id="dropdown" class="form-control selectpicker" data-live-search="true" name="dropdown" onchange="Check(this)">
+                        <option value="1">Ödənişlər</option>
+                        <option value="2">Məxaric</option>
+                        <option value="3">Mədaxil</option>
+                    </select>
+                </div>
+            </form>
+            <!--t-->
+            @*<div class="bs-docs-example no-code">
+                    <div class="btn-group bootstrap-select dropdown">
+                        <select class="selectpicker" data-live-search="true" tabindex="-98">
+                            <option>Hot Dog, Fries and</option>
+                            <option>Burger, Shake and a Smile</option>
+                            <option>Sugar, Spice and all things nice</option>
+                        </select>
+                    </div>
+                </div>*@
+            <!--t-->
+        </div>
+    </div>
+
+    <div id="costCreatte" hidden>
+        <div class="panel-white">
+            <div class="panel-heading">
+                <h3>Xərclər</h3>
+            </div>
+            <div class="panel-body">
+                <form asp-action="CostCreate" name="myForm" onsubmit="return validateForm()">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label" required>Məbləğ</label>
+                        <input class="form-control" autocomplete="off" type="number" step="0.01" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Kimə</label>
+                        <input value=" " class="form-control" autocomplete="off" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Nə üçün</label>
+                        <input value=" " class="form-control" autocomplete="off" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Sənəd №</label>
+                        <input value=" " class="form-control" autocomplete="off" />
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Kassa</label>
+                        <select class="form-control selectpicker" data-live-search="true" asp-items="ViewBag.CashId"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Məxaric növü</label>
+                        <select class="form-control selectpicker" data-live-search="true" asp-items="ViewBag.CostTypeId"></select>
+                    </div>
+                    <div class="form-group mb-0">
+                        <div><button type="submit" class="btn btn-primary waves-effect waves-light mr-1 ">Yadda saxla</button> </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="NewCustomer">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-user"></i>&nbsp; Yeni müştəri</h4>
+            </div>
+            <div class="modal-body" id="myNewCustomer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditCustomer">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" id="nnnnn">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-user"></i>&nbsp; Müştəri dəyişdir</h4>
+            </div>
+            <div class="modal-body" id="myEditCustomer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+   function EditCustomer(id) {
+        var url = "/Customers/EditCustomer?id=" + id;
+        $("#myEditCustomer").load(url, function () {
+            $("#EditCustomer").modal("show");
+            // select plugin run
+            $('.selectpicker').selectpicker();
+        })
+    }
+
+    function AddNewCustomer() {
+        var url = "/Customers/NewCustomer";
+        $("#myNewCustomer").load(url, function () {
+            $("#NewCustomer").modal("show");
+            $('.selectpicker').selectpicker();
+        })
+    }
+
+</script>
+
+
+

@@ -1,0 +1,83 @@
+﻿@model AMS.Models.GetPaymentDuration
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>GetPaymentDuration</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomersId" class="control-label"></label>
+                <input asp-for="CustomersId" class="form-control" />
+                <span asp-validation-for="CustomersId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContractDetailId" class="control-label"></label>
+                <input asp-for="ContractDetailId" class="form-control" />
+                <span asp-validation-for="ContractDetailId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContractId" class="control-label"></label>
+                <input asp-for="ContractId" class="form-control" />
+                <span asp-validation-for="ContractId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ObjectsId" class="control-label"></label>
+                <input asp-for="ObjectsId" class="form-control" />
+                <span asp-validation-for="ObjectsId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SupportTypeDefenition" class="control-label"></label>
+                <input asp-for="SupportTypeDefenition" class="form-control" />
+                <span asp-validation-for="SupportTypeDefenition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Customer" class="control-label"></label>
+                <input asp-for="Customer" class="form-control" />
+                <span asp-validation-for="Customer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentDate" class="control-label"></label>
+                <input asp-for="PaymentDate" class="form-control" />
+                <span asp-validation-for="PaymentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reason" class="control-label"></label>
+                <input asp-for="Reason" class="form-control" />
+                <span asp-validation-for="Reason" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateDate" class="control-label"></label>
+                <input asp-for="CreateDate" class="form-control" />
+                <span asp-validation-for="CreateDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pdid" class="control-label"></label>
+                <input asp-for="Pdid" class="form-control" />
+                <span asp-validation-for="Pdid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

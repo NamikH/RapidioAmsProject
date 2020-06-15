@@ -1,0 +1,183 @@
+﻿@model IEnumerable<AMS.Models.ObjectType>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    thead input {
+        width: 100%;
+    }
+</style>
+<!-- start: BREADCRUMB -->
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Tənzimləmələrs
+            </li>
+            <li class="active">
+                Obyekt parametrləri
+            </li>
+            <li class="active">
+                Öbyekt növü
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: PAGE CONTENT -->
+<!-- end: PAGE CONTENT-->
+<!--Modal add new building-->
+<!--New building end-->
+<!--New building end-->
+
+
+<div class="panel panel-white">
+    <div class="panel-heading">
+
+        <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#customer1" onclick="AddNewObjectType()"><i class="fa fa-plus"></i> Yeni obyekt növü</a>
+
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel-body">
+        <div class="table-responsive table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl" style="margin-bottom:0%" ;>
+            <table class="table table-bordered table-hover display" id="example" style="width:99.8%">
+                @*<table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse !important; border-spacing: 0 !important; width: 100% !important;">*@
+                <thead>
+                    <tr>
+                        <th>Açıqlama</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Defenition)</td>
+                            <td class="center">
+                                <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                    @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "1.3.2.1") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                    {<a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditObjectType(@item.Id)"><i class="fa fa-edit"></i></a>}
+                                    @if (CheckPermission.CheckRole(HttpContextAccessor.HttpContext.Session.GetString("_User"), "1.3.2.2") || CheckPermission.IsAdmin(HttpContextAccessor.HttpContext.Session.GetString("_User")))
+                                    {<a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Sil"><i class="fa fa-times fa fa-white"></i></a>}
+                                </div>
+                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                    <div class="btn-group">
+                                        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" onclick="EditObjectType(@item.Id)">
+                                                    <i class="fa fa-edit"></i> Dəyişdir
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-times"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="NewObjectType">
+    <div class="modal-dialog" style=" width 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-home"></i>&nbsp; Yeni obyekt</h4>
+            </div>
+            <div class="modal-body" id="myNewObjectType">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditObjectType">
+    <div class="modal-dialog" style=" width 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-home"></i>&nbsp; Obyekt növü (dəyişdir)</h4>
+            </div>
+            <div class="modal-body" id="myEditObjectType">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function AddNewObjectType() {
+        var url = "/ObjectTypes/NewObjectType";
+        $("#myNewObjectType").load(url, function () {
+            $("#NewObjectType").modal("show");
+        })
+    }
+    function EditObjectType(id) {
+        var url = "/ObjectTypes/EditObjectType?id=" + id;
+        $("#myEditObjectType").load(url, function () {
+            $("#EditObjectType").modal("show");
+        })
+    }
+
+
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Setup - add a text input to each footer cell
+        $('#example thead tr').clone(true).appendTo('#example thead');
+        $('#example thead tr:eq(1) th').each(function (i) {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var table = $('#example').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true
+        });
+    });
+</script>

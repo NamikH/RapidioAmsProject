@@ -1,0 +1,72 @@
+﻿@model AMS.Models.CashBalance
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Kassa qalığı</h2>
+
+@*<div>
+    <div class="form-group">
+        <label asp-for="" class="control-label"></label>
+        <input asp-for="" class="form-control" />
+        <span asp-validation-for="" class="text-danger"></span>
+    </div>
+</div>*@
+
+
+<div class="panel-white">
+    <div class="panel-body">
+        <form method="get" action="~/PaymentTransactions/Index">
+            <div class="form-group">
+                <label class="control-label">Hərəkət tipi :</label>
+                <select class="form-control" name="TransactionTypeId" asp-items="ViewBag.TransactionTypeId">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Kassa :</label>
+                <select class="form-control" name="CashId" asp-items="ViewBag.CashId">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Müştəri :</label>
+                <select class="form-control" name="CustomersId" asp-items="ViewBag.CustomersId">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Xidmət növü :</label>
+                <select class="form-control" name="SupportTypeId" asp-items="ViewBag.SupportTypeId">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Başlanğıc tarix :</label>
+                
+                    <input type="date" id="datetimepicker1" value="@DateTime.Today" name="begDate" class="form-control" data-validation="date" />
+                    <span class="text-danger"></span>
+                
+            </div>
+            <div class="form-group">
+                <label class="control-label">Son tarix :</label>
+                <input type="date" value="@DateTime.Today" data-date="" placeholder="YYYY-MM-DD" name="endDate" class="form-control" />
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group mb-0">
+                <button type="submit" class="btn btn-primary waves-effect waves-light mr-1">Axtar</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@*<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker1').datetimepicker({
+      format: 'DD/MM/YYYY HH:mm'
+    });
+  });
+</script>*@

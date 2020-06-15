@@ -1,0 +1,230 @@
+﻿@model IEnumerable<AMS.Models.Payments>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<style>
+    thead input {
+        width: 100%;
+    }
+</style>
+
+
+
+<!-- end: TOOLBAR -->
+<!-- end: PAGE HEADER -->
+<!-- start: BREADCRUMB -->
+<div class="row">
+    <div class="col-md-12">
+        <ol class="breadcrumb">
+            <li class="active">
+                Əməliyyatlar
+            </li>
+            <li class="active">
+                Tranzaksiyalar
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- end: BREADCRUMB -->
+<!-- start: PAGE CONTENT -->
+
+
+
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <div class="panel-tools">
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-xs dropdown-toggle btn-transparent-grey">
+                    <i class="fa fa-cog"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-light pull-right" role="menu">
+                    <li>
+                        <a class="panel-expand" href="#">
+                            <i class="fa fa-expand"></i> <span>Fullscreen</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel-body">
+        <div class="table-responsive table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl" style="margin-bottom:0%" ;>
+            <table class="table table-bordered table-hover display" id="example" style="width:99.8%">
+                @*<table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse !important; border-spacing: 0 !important; width: 100% !important;">*@
+                <thead>
+                    <tr>
+                        <th>
+                            Məbləğ
+                        </th>
+                        <th>
+                            Açıqlama
+                        </th>
+                        <th>
+                            Açıqlama2
+                        </th>
+                        <th>
+                            Açıqlama3
+                        </th>
+                        <th>
+                            Əməliyyat növü
+                        </th>
+                        <th>
+                            Hərəkət növü
+                        </th>
+                        <th>
+                            Kassa
+                        </th>
+                        <th>
+                            Müqavilə №
+                        </th>
+                        <th>
+                            Məxaric növü
+                        </th>
+                        <th>
+                            Mədaxil növü
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Explanation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Explanation2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Explanation3)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TransactionType.Defenition)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SignType.Defenition)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cash.Defenition)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContractDetail.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CostType.Defenition)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IncomeType.Defenition)
+                            </td>
+                            <td class="center">
+                                <div class="visible-md visible-lg hidden-sm hidden-xs row">
+                                    <a class="btn btn-xs btn-blue tooltips" data-placement="top" data-original-title="Dəyişdir" onclick="EditPayment(@item.Id)"><i class="fa fa-edit"></i></a>
+                                    <a href="#" class="btn btn-xs btn-red tooltips" data-placement="top" data-original-title="Sil" onclick="DeletePayment(@item.Id)"><i class="fa fa-times fa fa-white"></i></a>
+                                </div>
+                                <div class="visible-xs visible-sm hidden-md hidden-lg">
+                                    <div class="btn-group">
+                                        <a class="btn btn-green dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu pull-right dropdown-dark">
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-edit"></i> Dəyişdir
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-times"></i> Sil
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="EditPayment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-building"></i>&nbsp; Ödəniş (dəyişdir)</h4>
+            </div>
+            <div class="modal-body" id="myEditPayment">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="DeletePayment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4><i class="fa fa-building"></i>&nbsp; Ödəniş (sil)</h4>
+            </div>
+            <div class="modal-body" id="myDeletePayment">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function DeletePayment(id) {
+        var url = "/Payments/DeletePayment?id=" + id;
+        $("#myDeletePayment").load(url, function () {
+            $("#DeletePayment").modal("show");
+        })
+    }
+    function EditPayment(id) {
+        var url = "/Payments/EditPayment?id=" + id;
+        $("#myEditPayment").load(url, function () {
+            $("#EditPayment").modal("show");
+        })
+    }
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        // Setup - add a text input to each footer cell
+        $('#example thead tr').clone(true).appendTo('#example thead');
+        $('#example thead tr:eq(1) th').each(function (i) {
+            var title = $(this).text();
+            $(this).html('<input type="text" />');
+
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var table = $('#example').DataTable({
+            orderCellsTop: true,
+            fixedHeader: true
+        });
+    });
+</script>
